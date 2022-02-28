@@ -40,13 +40,6 @@ const messages = defineMessages({
   searchCategories: { id: 'settings.searchCategories' },
   excludedCategories: { id: 'settings.excludedCategories' },
   paymentMethodsLabel: { id: 'settings.paymentMethods_label' },
-  hidePaymentMethodSelection: { id: 'settings.hidePaymentMethodSelection' },
-  hidePaymentMethodSelection_checked: {
-    id: 'settings.hidePaymentMethodSelection_checked',
-  },
-  hidePaymentMethodSelection_unchecked: {
-    id: 'settings.hidePaymentMethodSelection_unchecked',
-  },
   returnOptionsLabel: { id: 'settings.returnOptions_label' },
   noCustomOptions: { id: 'settings.noCustomOptions' },
   noCustomOptionsHowTo: { id: 'settings.noCustomOptions_HowTo' },
@@ -186,8 +179,6 @@ class ReturnsSettings extends Component<any, any> {
           options: json[0].options || [],
           excludedCategories: JSON.parse(json[0].excludedCategories),
           enableOtherOption: json[0].enableOtherOption,
-          hidePaymentMethodSelection:
-            json[0].hidePaymentMethodSelection ?? false,
           loading: false,
           enablePickupPoints: json[0].enablePickupPoints,
         })
@@ -328,7 +319,6 @@ class ReturnsSettings extends Component<any, any> {
       options,
       enableOtherOption,
       enablePickupPoints,
-      hidePaymentMethodSelection,
     } = this.state
 
     console.log(enablePickupPoints, 'stateee')
@@ -356,7 +346,6 @@ class ReturnsSettings extends Component<any, any> {
     }
 
     if (
-      !hidePaymentMethodSelection &&
       !payments.paymentBank.checked &&
       !payments.paymentCard.checked &&
       !payments.paymentVoucher.checked
@@ -387,7 +376,6 @@ class ReturnsSettings extends Component<any, any> {
       options,
       enableOtherOption,
       enablePickupPoints,
-      hidePaymentMethodSelection,
       type: schemaTypes.settings,
     }
 
@@ -487,7 +475,6 @@ class ReturnsSettings extends Component<any, any> {
       isModalOpen,
       enableOtherOption,
       enablePickupPoints,
-      hidePaymentMethodSelection,
     } = this.state
 
     const { formatMessage } = this.props.intl
@@ -621,49 +608,21 @@ class ReturnsSettings extends Component<any, any> {
                   ) : null}
                 </div>
                 <Divider orientation="horizontal" />
-                <div className="flex flex-column w-100 mb6">
-                  <p className="f5 mv4">
-                    {formatMessage({
-                      id: messages.hidePaymentMethodSelection.id,
-                    })}
+                <div className="flex flex-column w-100">
+                  <p className="f4 mb6">
+                    {formatMessage({ id: messages.paymentMethodsLabel.id })}
                   </p>
-                  <Toggle
-                    label={
-                      hidePaymentMethodSelection
-                        ? formatMessage({
-                            id: messages.hidePaymentMethodSelection_checked.id,
-                          })
-                        : formatMessage({
-                            id: messages.hidePaymentMethodSelection_unchecked
-                              .id,
-                          })
-                    }
-                    semantic
-                    checked={hidePaymentMethodSelection}
-                    onChange={() =>
-                      this.setState((prevState) => ({
-                        hidePaymentMethodSelection:
-                          !prevState.hidePaymentMethodSelection,
-                      }))
-                    }
+                  <CheckboxGroup
+                    name="simpleCheckboxGroup"
+                    label={formatMessage({ id: messages.all.id })}
+                    id="simple"
+                    value="simple"
+                    checkedMap={payments}
+                    onGroupChange={(newCheckedMap) => {
+                      this.setState({ payments: newCheckedMap })
+                    }}
                   />
-                  {!hidePaymentMethodSelection && (
-                    <>
-                      <p className="f5 mb6">
-                        {formatMessage({ id: messages.paymentMethodsLabel.id })}
-                      </p>
-                      <CheckboxGroup
-                        name="simpleCheckboxGroup"
-                        label={formatMessage({ id: messages.all.id })}
-                        id="simple"
-                        value="simple"
-                        checkedMap={payments}
-                        onGroupChange={(newCheckedMap) => {
-                          this.setState({ payments: newCheckedMap })
-                        }}
-                      />
-                    </>
-                  )}
+
                   {errors.payments && (
                     <p className={`${styles.errorMessage}`}>
                       {errors.payments}
