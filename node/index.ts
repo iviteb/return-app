@@ -24,6 +24,7 @@ import { changeProductStatus } from './middlewares/api/changeProductStatus'
 import { checkStatus } from './middlewares/api/checkStatus'
 import { updateStatus } from './middlewares/api/updateStatus'
 import { createRefund } from './middlewares/createRefund'
+import { errorHandler } from './middlewares/errorHandler'
 import { queries, mutations } from './resolvers'
 
 const TIMEOUT_MS = 5000
