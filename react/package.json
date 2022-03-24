@@ -28,7 +28,6 @@
     "@types/react-intl": "^2.3.18",
     "@vtex/test-tools": "^0.3.2",
     "@vtex/tsconfig": "^0.2.0",
-    "pentruanimale.return-app": "https://robertinnoship--pentruanimale.myvtex.com/_v/private/typings/linked/v1/pentruanimale.return-app@2.19.0+build1648136887/public/@types/pentruanimale.return-app",
     "prop-types": "^15.7.2",
     "vtex.css-handles": "http://vtex.vtexassets.com/_v/public/typings/v1/vtex.css-handles@0.4.4/public/@types/vtex.css-handles",
     "vtex.device-detector": "http://vtex.vtexassets.com/_v/public/typings/v1/vtex.device-detector@0.2.6/public/@types/vtex.device-detector",
@@ -47,5 +46,5 @@
     "vtex.styleguide": "http://vtex.vtexassets.com/_v/public/typings/v1/vtex.styleguide@9.146.1/public/@types/vtex.styleguide",
     "vtex.telemarketing": "http://vtex.vtexassets.com/_v/public/typings/v1/vtex.telemarketing@2.11.1/public/@types/vtex.telemarketing"
   },
-  "version": "2.19.0"
+  "version": "2.19.2"
 }

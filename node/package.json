@@ -13,7 +13,6 @@
     "@types/ramda": "types/npm-ramda#dist",
     "@vtex/api": "6.45.10",
     "@vtex/test-tools": "^1.0.0",
-    "pentruanimale.return-app": "https://robertinnoship--pentruanimale.myvtex.com/_v/private/typings/linked/v1/pentruanimale.return-app@2.19.0+build1648136887/public/@types/pentruanimale.return-app",
     "vtex.css-handles": "http://vtex.vtexassets.com/_v/public/typings/v1/vtex.css-handles@0.4.4/public/@types/vtex.css-handles",
     "vtex.device-detector": "http://vtex.vtexassets.com/_v/public/typings/v1/vtex.device-detector@0.2.6/public/@types/vtex.device-detector",
     "vtex.easypost": "http://vtex.vtexassets.com/_v/public/typings/v1/vtex.easypost@0.1.1/public/@types/vtex.easypost",
@@ -34,5 +33,5 @@
   "scripts": {
     "lint": "tsc --noEmit --pretty && tslint -c tslint.json --fix './**/*.ts'"
   },
-  "version": "2.19.0"
+  "version": "2.19.2"
 }
