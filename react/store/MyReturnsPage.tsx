@@ -127,16 +127,16 @@ class MyReturnsPage extends Component<any, any> {
     return a.dateSubmitted < b.dateSubmitted
       ? -1
       : a.dateSubmitted > b.dateSubmitted
-      ? 1
-      : 0
+        ? 1
+        : 0
   }
 
   sortDateSubmittedDESC(a, b) {
     return a.dateSubmitted < b.dateSubmitted
       ? 1
       : a.dateSubmitted > b.dateSubmitted
-      ? -1
-      : 0
+        ? -1
+        : 0
   }
 
   sortStatusASC(a, b) {
@@ -258,8 +258,7 @@ class MyReturnsPage extends Component<any, any> {
     }
 
     fetch(
-      `${fetchPath.getDocuments + schemaNames.request}/${
-        schemaTypes.requests
+      `${fetchPath.getDocuments + schemaNames.request}/${schemaTypes.requests
       }/${where}`,
       {
         method: fetchMethod.get,
@@ -471,8 +470,8 @@ class MyReturnsPage extends Component<any, any> {
     const statusLabel =
       filters.status !== ''
         ? formatMessage({
-            id: `returns.status${getStatusTranslation(filters.status)}`,
-          })
+          id: `returns.status${getStatusTranslation(filters.status)}`,
+        })
         : formatMessage({ id: messages.statusAllStatuses.id })
 
     if (error) {

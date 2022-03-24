@@ -13,6 +13,7 @@ import {
   Button,
   Input,
   Alert,
+  Collapsible,
 } from 'vtex.styleguide'
 import { withRuntimeContext } from 'vtex.render-runtime'
 
@@ -38,6 +39,7 @@ import { fetchHeaders, fetchMethod, fetchPath } from '../common/fetch'
 import StatusHistoryTimeline from '../components/StatusHistoryTimeline'
 import CREATE_LABEL from '../graphql/createLabel.gql'
 import allowedStatusList from '../common/helpers/allowedStatus'
+import OrderDetails from './Innoship'
 
 const messages = defineMessages({
   statusCommentError: { id: 'returns.statusCommentError' },
@@ -62,6 +64,7 @@ const messages = defineMessages({
   restockFee: { id: `returns.restockFee` },
   productValueToRefund: { id: 'returns.productValueToRefund' },
   shippingValueToBeRefunded: { id: `returns.shippingValueToBeRefunded` },
+  requestAWB: { id: `returns.requestAWB` },
 })
 
 class ReturnForm extends Component<any, any> {
@@ -95,6 +98,10 @@ class ReturnForm extends Component<any, any> {
       showLabelError: false,
       labelDisabled: false,
       totalAmount: 0,
+      order: null,
+      log: [],
+      tableIsLoading: true,
+      awbIsOpen: false,
     }
   }
 
@@ -102,6 +109,139 @@ class ReturnForm extends Component<any, any> {
     this.getProfile().then()
     this.getFullData()
   }
+
+  getOrder = async (orderId: string) => {
+    try {
+      const getOrderResponse = await fetch(
+        `/api/oms/pvt/orders/${orderId}/?_=${Date.now()}`,
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            Accept: 'application/json',
+          },
+        }
+      )
+
+      const orderResponse = await getOrderResponse.json()
+
+      this.setState({ order: orderResponse }, () => {
+        this.getLogItems()
+      })
+    } catch (err) {
+      this.setState({ tableIsLoading: false })
+    }
+  }
+
+  // START LOG Functions --------------------------------------
+
+  getLogItems = async () => {
+    const { order } = this.state
+
+    try {
+      const logItemsResponse = await fetch(
+        `/api/dataentities/vtex_innoship/search?_fields=id,orderId,data,createdIn,type&_sort=createdIn DESC&orderId=${order.orderId}&type=error-log&_size=100`,
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            Accept: 'application/json',
+            'Cache-Control': 'no-cache',
+          },
+        }
+      )
+
+      const logItems = await logItemsResponse.json()
+
+      this.setState({ log: logItems, tableIsLoading: false })
+    } catch (err) {
+      this.setState({ tableIsLoading: false })
+    }
+  }
+
+  logOrderError = (errors, source = 'innoship-errors') => {
+    let message
+
+    if (errors.hasOwnProperty('message')) {
+      source = 'change-seller/delete-product error'
+      message = errors.message
+    } else {
+      message = Object.keys(errors)
+        .map(function (key) {
+          return errors[key][0]
+        })
+        .join('\n')
+    }
+
+    if (message) {
+      const { order } = this.state
+
+      const payload = {
+        source,
+        message,
+      }
+
+      try {
+        fetch(`/api/oms/pvt/orders/${order.orderId}/interactions`, {
+          method: 'POST',
+          body: JSON.stringify(payload),
+          headers: {
+            'Content-Type': 'application/json',
+            Accept: 'application/json',
+          },
+        })
+      } catch (err) {
+        this.setState({ tableIsLoading: false })
+      }
+
+      try {
+        const logSchema = {
+          properties: {
+            orderId: { type: 'string' },
+            data: { type: 'object' },
+            type: { type: 'string' },
+          },
+          'v-indexed': ['orderId', 'type'],
+          'v-default-fields': ['id', 'orderId', 'data', 'createdIn', 'type'],
+          'v-cache': false,
+        }
+
+        fetch(`/api/dataentities/vtex_innoship/schemas/default`, {
+          method: 'PUT',
+          body: JSON.stringify(logSchema),
+          headers: {
+            'Content-Type': 'application/json',
+            Accept: 'application/json',
+          },
+        }).then(() => {
+          try {
+            fetch(`/api/dataentities/vtex_innoship/documents`, {
+              method: 'POST',
+              body: JSON.stringify({
+                orderId: order.orderId,
+                type: 'error-log',
+                data: {
+                  error: payload,
+                },
+              }),
+              headers: {
+                'Content-Type': 'application/json',
+                Accept: 'application/json',
+              },
+            }).then(() => {
+              setTimeout(() => {
+                this.getLogItems()
+              }, 1000)
+            })
+          } catch (err) {
+            this.setState({ tableIsLoading: false })
+          }
+        })
+      } catch (err) {
+        this.setState({ tableIsLoading: false })
+      }
+    }
+  }
+
+  // END LOG Functions --------------------------------------
 
   getGiftCardInfo(request: any) {
     return `RA${request.id.split('-')[0]}`
@@ -169,6 +309,8 @@ class ReturnForm extends Component<any, any> {
       schemaTypes.requests,
       requestId
     ).then((request) => {
+      this.getOrder(request[0].orderId)
+
       if (request[0].refundedShippingValue) {
         this.setState({
           refundedShippingValue: request[0].refundedShippingValue,
@@ -277,8 +419,7 @@ class ReturnForm extends Component<any, any> {
 
   async getProductsFromMasterData(orderId: string, returnId: string) {
     return fetch(
-      `${fetchPath.getDocuments + schemaNames.product}/${
-        schemaTypes.products
+      `${fetchPath.getDocuments + schemaNames.product}/${schemaTypes.products
       }/orderId=${orderId}`,
       {
         method: fetchMethod.get,
@@ -590,7 +731,7 @@ class ReturnForm extends Component<any, any> {
       method: fetchMethod.post,
       body: JSON.stringify(body),
       headers: fetchHeaders,
-    }).then(() => {})
+    }).then(() => { })
   }
 
   savePartial = (schema: string, body: any) => {
@@ -598,7 +739,7 @@ class ReturnForm extends Component<any, any> {
       method: fetchMethod.post,
       body: JSON.stringify(body),
       headers: fetchHeaders,
-    }).then(() => {})
+    }).then(() => { })
   }
 
   handleQuantity(product: any, quantity: any) {
@@ -617,14 +758,14 @@ class ReturnForm extends Component<any, any> {
       productsForm: prevState.productsForm.map((el) =>
         el.id === product.id
           ? {
-              ...el,
-              goodProducts:
-                quantityInput > product.quantity
-                  ? product.quantity
-                  : quantityInput,
-              refundedValue: !quantityInput && 0,
-              status,
-            }
+            ...el,
+            goodProducts:
+              quantityInput > product.quantity
+                ? product.quantity
+                : quantityInput,
+            refundedValue: !quantityInput && 0,
+            status,
+          }
           : el
       ),
     }))
@@ -639,13 +780,13 @@ class ReturnForm extends Component<any, any> {
         productsForm: prevState.productsForm.map((el) =>
           el.id === product.id
             ? {
-                ...el,
-                restockValue,
-                refundedValue:
-                  restockValue > product.totalValue || !restockValue
-                    ? 0
-                    : product.totalValue - (restockValue || 0),
-              }
+              ...el,
+              restockValue,
+              refundedValue:
+                restockValue > product.totalValue || !restockValue
+                  ? 0
+                  : product.totalValue - (restockValue || 0),
+            }
             : el
         ),
       }))
@@ -1006,6 +1147,32 @@ class ReturnForm extends Component<any, any> {
             intlZone={intlArea.admin}
           />
           {this.renderStatusCommentForm()}
+
+          {/* AWB Section */}
+
+          {this.state.order && (
+            <>
+              <Collapsible
+                header={
+                  <span className="c-action-primary hover-c-action-primary fw5">
+                    {formatMessage({ id: messages.requestAWB.id })}
+                  </span>
+                }
+                onClick={(e: any) =>
+                  this.setState({ awbIsOpen: e.target.isOpen })
+                }
+                isOpen={this.state.awbIsOpen}
+              >
+                <OrderDetails
+                  logError={this.logOrderError}
+                  order={this.state.order}
+                  intl={this.props.intl}
+                  showToast={this.props.showToast}
+                />
+              </Collapsible>
+            </>
+          )}
+
           <StatusHistoryTable statusHistory={statusHistory} />
         </div>
       )

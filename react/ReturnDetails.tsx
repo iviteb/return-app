@@ -1,6 +1,13 @@
 import type { FC } from 'react'
 import React from 'react'
-import { Layout, PageHeader, PageBlock } from 'vtex.styleguide'
+import {
+  Layout,
+  PageHeader,
+  PageBlock,
+  ToastProvider,
+  withToast,
+  ToastConsumer,
+} from 'vtex.styleguide'
 import { useIntl, defineMessages } from 'react-intl'
 import { useRuntime } from 'vtex.render-runtime'
 
@@ -31,16 +38,23 @@ const ReturnDetails: FC = (props) => {
       }
     >
       <PageBlock variation="full">
-        <ReturnForm
-          data={props}
-          intl={intl}
-          fetchApi={axios}
-          binding={binding}
-          production={production}
-        />
+        <ToastProvider positioning="window">
+          <ToastConsumer>
+            {({ showToast }) => (
+              <ReturnForm
+                data={props}
+                intl={intl}
+                fetchApi={axios}
+                binding={binding}
+                production={production}
+                showToast={showToast}
+              />
+            )}
+          </ToastConsumer>
+        </ToastProvider>
       </PageBlock>
     </Layout>
   )
 }
 
-export default ReturnDetails
+export default withToast(ReturnDetails)

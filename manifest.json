@@ -1,5 +1,5 @@
 {
-  "vendor": "vtex",
+  "vendor": "pentruanimale",
   "name": "return-app",
   "version": "2.19.0",
   "title": "Return app",
@@ -68,14 +68,14 @@
         "host": "api.vtex.com",
         "path": "/dataentities/*"
       }
+    },
+    {
+      "name": "outbound-access",
+      "attrs": {
+        "host": "infra.io.vtex.com",
+        "path": "/apps/v0/*"
+      }
     }
   ],
-  "billingOptions": {
-    "termsURL": "https://compliance.vtex.com/gdpr/policies/vtex-privacy-policy",
-    "support": {
-      "url": "https://support.vtex.com/hc/requests"
-    },
-    "free": true
-  },
   "$schema": "https://raw.githubusercontent.com/vtex/node-vtex-api/master/gen/manifest.schema"
 }
