@@ -189,8 +189,7 @@ class MyReturnsPageAdd extends Component<Props, State> {
 
   async getSettings() {
     return fetch(
-      `${fetchPath.getDocuments + schemaNames.settings}/${
-        schemaTypes.settings
+      `${fetchPath.getDocuments + schemaNames.settings}/${schemaTypes.settings
       }/1`,
       {
         method: fetchMethod.get,
@@ -256,8 +255,7 @@ class MyReturnsPageAdd extends Component<Props, State> {
     const currentDate = getCurrentDate()
 
     return fetch(
-      `${
-        fetchPath.getOrders
+      `${fetchPath.getOrders
       }clientEmail=${userEmail}&orderBy=creationDate,desc&f_status=invoiced&f_creationDate=creationDate:[${substractDays(
         maxDays
       )} TO ${currentDate}]`
@@ -289,9 +287,8 @@ class MyReturnsPageAdd extends Component<Props, State> {
           ? countries[order.shippingData.address.country]
           : order.shippingData.address.country,
         locality: order.shippingData.address.city,
-        address: `${order.shippingData.address.street} ${
-          order.shippingData.address.number || ''
-        }${complement}`,
+        address: `${order.shippingData.address.street} ${order.shippingData.address.number || ''
+          }${complement}`,
         state: order.shippingData.address.state || '',
         zip: order.shippingData.address.postalCode || '',
       })
@@ -482,8 +479,7 @@ class MyReturnsPageAdd extends Component<Props, State> {
 
   async checkProduct(where: string, productSkuId: string) {
     return fetch(
-      `${fetchPath.getDocuments + schemaNames.product}/${
-        schemaTypes.products
+      `${fetchPath.getDocuments + schemaNames.product}/${schemaTypes.products
       }/${where}`
     )
       .then((response) => response.json())
@@ -781,10 +777,10 @@ class MyReturnsPageAdd extends Component<Props, State> {
       orderProducts: prevState.orderProducts.map((el) =>
         el.uniqueId === product.uniqueId
           ? {
-              ...el,
-              selectedQuantity:
-                quantity > product.quantity ? product.quantity : quantity,
-            }
+            ...el,
+            selectedQuantity:
+              quantity > product.quantity ? product.quantity : quantity,
+          }
           : el
       ),
     }))
@@ -795,10 +791,10 @@ class MyReturnsPageAdd extends Component<Props, State> {
       orderProducts: prevState.orderProducts.map((el) =>
         el.uniqueId === product.uniqueId
           ? {
-              ...el,
-              reasonCode: value,
-              reason: '',
-            }
+            ...el,
+            reasonCode: value,
+            reason: '',
+          }
           : el
       ),
     }))
@@ -809,9 +805,9 @@ class MyReturnsPageAdd extends Component<Props, State> {
       orderProducts: prevState.orderProducts.map((el) =>
         el.uniqueId === product.uniqueId
           ? {
-              ...el,
-              reason: value,
-            }
+            ...el,
+            reason: value,
+          }
           : el
       ),
     }))
@@ -822,9 +818,9 @@ class MyReturnsPageAdd extends Component<Props, State> {
       orderProducts: prevState.orderProducts.map((el) =>
         el.uniqueId === product.uniqueId
           ? {
-              ...el,
-              condition: value,
-            }
+            ...el,
+            condition: value,
+          }
           : el
       ),
     }))

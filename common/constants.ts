@@ -204,7 +204,7 @@ export const RETURNS_SCHEMA = {
     status: { type: 'string' },
     dateSubmitted: { type: 'string', format: 'date-time' },
     sequenceNumber: {
-      type: ['string', 'integer', 'null'],
+      type: ['string', 'null'],
     },
     // Comments
     comment: { type: 'string' },

@@ -197,5 +197,6 @@
   "returns.newWithBox": "Nuovo con scatola",
   "returns.newWithoutBox": "Nuovo senza scatola",
   "returns.usedWithBox": "Usato con scatola",
-  "returns.usedWithoutBox": "Usato senza scatola"
+  "returns.usedWithoutBox": "Usato senza scatola",
+  "returns.requestAWB": "Richiedi AWB"
 }

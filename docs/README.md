@@ -1,12 +1,19 @@
-# Return App
 
-VTEX Return App
+# Return App - Integration with Innoship
+
+## VTEX Return App
+
+### Added: Innoship Integration
+
+In addition to the core VTEX Return App, this app integrates the Innoship functionality (`https://github.com/vtex-apps/innoship`).
+
+New feature: The Return Info page contains a collpasible that can show/hide an Innoship component. This component contains the Innoship logic to handle the return order such as Reques AWB, or checking the shipping status. 
 
 ## Installation Guide
 
 - Open the VTEX App Store and install this app on your store, or run the following command on VTEX toolbelt:
 
-> vtex install vtex.return-app@1.x
+> vtex install pentruanimale.return-app@2.x
 
 - From the left side access the `Returns > Requests` page. The first time you access it, the application creates the masterdata schema and settings it needs automatically.
 
@@ -26,7 +33,7 @@ The return application serves the necessary functionalities for requesting retur
 
 #### Installation and configuration
 
-The application can be installed using the following command in VTEX Toolbelt: `vtex install vtex.return-app@0.x`
+The application can be installed using the following command in VTEX Toolbelt: `vtex install pentruanimale.return-app@2.x`
 
 After the installation you must access the `Returns > Requests` page from the admin menu. At this point, the application creates the masterdata schema and email templates automatically.
 
