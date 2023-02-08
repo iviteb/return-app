@@ -1,9 +1,9 @@
 {
   "extensions": {
-    "my-account-portal/routes/pentruanimale.return-app": {
+    "my-account-portal/routes/pentruanimalero.return-app": {
       "component": "ExtensionRouter"
     },
-    "my-account-portal/menu-links-after/pentruanimale.return-app": {
+    "my-account-portal/menu-links-after/pentruanimalero.return-app": {
       "component": "ExtensionLinks"
     }
   }

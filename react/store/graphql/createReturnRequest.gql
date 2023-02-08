@@ -6,7 +6,7 @@ mutation CreateReturn(
     returnRequest: $returnRequest
     returnedItems: $returnedItems
     authToken: AUTH_TOKEN
-  ) @context(provider: "pentruanimale.return-app") {
+  ) @context(provider: "pentruanimalero.return-app") {
     returnRequestId
   }
 }
